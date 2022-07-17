@@ -9,3 +9,9 @@ Furthermore, to get insight on the data, data visualization on average duration 
 And the finding indicated there is a significant usage gap between Casual Rider and Cyclistic Member during the weekdays. This might be contributed by different habit/behavior is bike usage, i.e., based on the data Cyclistic Member ridership is constant throughout the week which might indicates that they are using the bikes for their daily commute. As for Casual Rider, we only see a usage number flipped during weekends time, thus this indicates they are using the bike for leisure purpose.
 
 The data has been made available by Motivate International Inc. under this license (https://www.divvybikes.com/data-license-agreement).
+
+File published:
+1. Capstone.Rmd - R Markdown file
+2. Capstone.html - R Markdown converted to HTML
+3. Capstone.pdf - R Markdown converted to PDF
+4. Capstone_publish.R - R code file for the analysis
