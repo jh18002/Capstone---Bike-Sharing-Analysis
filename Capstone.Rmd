@@ -3,8 +3,8 @@ title: "Cyclistic Trip Data"
 author: "James Hung"
 date: "`r Sys.Date()`"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -139,7 +139,8 @@ remove(bike_trip_12mo)
 Forth, we need format ride_length from *difftime* datatype to *numeric* datatype to ensure all futur calculation based on this column is proper:
 
 ```{r Format ride length to numeric}
-bike_trip_12mo_cleaned$ride_length <- as.numeric(as.character(bike_trip_12mo_cleaned$ride_length))
+bike_trip_12mo_cleaned$ride_length <- 
+  as.numeric(as.character(bike_trip_12mo_cleaned$ride_length))
 ```
 
 Fifth, we need to calculate day-of-week based on the **started_at** column:
@@ -156,7 +157,9 @@ Lastly, we calculate **trip_distance** variable which derived from start_lng, st
 ```{r Calc trip distance}
 bike_trip_12mo_cleaned <- bike_trip_12mo_cleaned %>% 
   rowwise %>% 
-  mutate(trip_distance = as.vector(distm(x = c(start_lng, start_lat), y = c(end_lng, end_lat), fun = distHaversine)))
+  mutate(trip_distance = as.vector(distm(x = c(start_lng, start_lat), 
+                                         y = c(end_lng, end_lat), 
+                                         fun = distHaversine)))
 ```
 
 With trip_distance data, it can provide a different angle on the data usage habit between memeber riders and causal riders.
@@ -185,23 +188,33 @@ colnames(avg_ride_length_usertype) <- c("member_casual", "avg_rider_length")
 Third, we aggregate the data to calculate the average **ride_length** by user types and day-of-week:
 
 ```{r Pivot avg ride length by rider type, bike type, and day-of-week}
-avg_ride_length_usertype_dayofweek <- aggregate(bike_trip_12mo_cleaned$ride_length, 
-          by = list(bike_trip_12mo_cleaned$member_casual, bike_trip_12mo_cleaned$day_of_week), FUN = mean)
+avg_ride_length_usertype_dayofweek <- 
+  aggregate(bike_trip_12mo_cleaned$ride_length, 
+          by = list(bike_trip_12mo_cleaned$member_casual, 
+                    bike_trip_12mo_cleaned$day_of_week), 
+          FUN = mean)
 
-colnames(avg_ride_length_usertype_dayofweek) <- c("member_casual", "day_of_week", "avg_ride_length")
+colnames(avg_ride_length_usertype_dayofweek) <- c("member_casual", 
+                                                  "day_of_week", 
+                                                  "avg_ride_length")
 
 avg_ride_length_usertype_dayofweek <- avg_ride_length_usertype_dayofweek %>% 
   mutate(day_of_week = wday(day_of_week, label=TRUE, abbr=FALSE))
 
-avg_ride_length_usertype_biketype_dayofweek <- aggregate(bike_trip_12mo_cleaned$ride_length, 
-                                                by = list(bike_trip_12mo_cleaned$member_casual,
-                                                          bike_trip_12mo_cleaned$rideable_type,
-                                                          bike_trip_12mo_cleaned$day_of_week), 
-                                                FUN = mean)
+avg_ride_length_usertype_biketype_dayofweek <- 
+  aggregate(bike_trip_12mo_cleaned$ride_length, 
+    by = list(bike_trip_12mo_cleaned$member_casual,
+              bike_trip_12mo_cleaned$rideable_type,
+              bike_trip_12mo_cleaned$day_of_week), 
+    FUN = mean)
 
-colnames(avg_ride_length_usertype_biketype_dayofweek) <- c("member_casual", "rideable_type", "day_of_week", "avg_ride_length")
+colnames(avg_ride_length_usertype_biketype_dayofweek) <- c("member_casual", 
+                                                           "rideable_type", 
+                                                           "day_of_week", "
+                                                           avg_ride_length")
 
-avg_ride_length_usertype_biketype_dayofweek <- avg_ride_length_usertype_biketype_dayofweek %>% 
+avg_ride_length_usertype_biketype_dayofweek <- 
+  avg_ride_length_usertype_biketype_dayofweek %>% 
   mutate(day_of_week = wday(day_of_week, label=TRUE, abbr=FALSE))
 ```
 
@@ -217,7 +230,8 @@ count_rides_usertype_dayofweek <- count_rides_usertype_dayofweek %>%
 count_rides_usertype_biketype_dayofweek <- bike_trip_12mo_cleaned %>% 
   count(member_casual, rideable_type, day_of_week, name = "number_of_rides")
 
-count_rides_usertype_biketype_dayofweek <- count_rides_usertype_biketype_dayofweek %>% 
+count_rides_usertype_biketype_dayofweek <- 
+  count_rides_usertype_biketype_dayofweek %>% 
   mutate(day_of_week = wday(day_of_week, label=TRUE, abbr=FALSE))
 ```
 
@@ -291,9 +305,9 @@ count_rides_usertype_dayofweek %>%
        y = "Number of Rides")
 ```
 
-The line graph shows that during weekdays, Cyclistic Members have higher ridership than Casual Riders group. However, the ridership of Casual Riders increased significantly during each weekends throughout the 12 months period. This implies and reinforces our hypothesis indicated above, i.e., Cyclistic Members are using the Cyclistic bikes for their daily commute in close proximity and Casual Riders are using the bikes to travel to further for leisure.
+The above line graph shows that during weekdays, Cyclistic Members have higher ridership than Casual Riders group. However, the ridership of Casual Riders increased significantly during each weekends throughout the 12 months period. This implies and reinforces our hypothesis indicated above, i.e., Cyclistic Members are using the Cyclistic bikes for their daily commute in close proximity and Casual Riders are using the bikes to travel to further for leisure.
 
-Additionally, if we include rideable type (i.e., bike type) data into the analysis, we would see that the number of rides pertaining to Casual Riders is relatively low compare to Cyclistic Members during weekdays. On the other hand, the ridership number increased to the level on par of the ridership number of Cyclistic Members during weekends. In facts, the ridership number of Cyclistic Members is constant throughout the week. This implies that to convert Casual Rider to Cyclistic Member, the company will need change the Casual Ridership habit or behavior.
+Additionally, if we include rideable type (i.e., bike type) data into the analysis, we would see that the number of rides pertaining to Casual Riders is relatively low compare to Cyclistic Members during weekdays. On the other hand, the ridership number increased to the level on par of the ridership number of Cyclistic Members during weekends. In facts, the ridership number of Cyclistic Members is constant throughout the week. This implies that to convert Casual Rider to Cyclistic Member, the company will need change the Casual Ridership habit or behavior.  The following graph shows the ridership number based on rideable type:
 
 ```{r Visualization for number of rides with bike type}
 count_rides_usertype_biketype_dayofweek %>% 
@@ -312,12 +326,14 @@ count_rides_usertype_biketype_dayofweek %>%
        y = "Number of Rides")
 ```
 
+Beside ridership number based on rideable type, the above graph implicates an additional aspect is there were docked bikes associated with Casual Rider only throughout the year.  There is no docked bike showing under Cyclistic Member.  Therefore, we need more research and information on the docked bikes situation.  Why only Casual Riders had docked bikes?  How about Cyclistic Members?  This might gives us insight on another perspective of the usage habit difference between Casual Riders and Cyclistic Members.
+
 ## Recommending Actions
 
 In conclusion, based on the past 12 months ridership data, there is a significant usage gap between Casual Rider and Cyclistic Member during the weekdays. This might be contributed by different habit/behavior is bike usage, i.e., based on the data Cyclistic Member ridership is constant throughout the week which might indicates that they are using the bikes for their daily commute. As for Casual Rider, we only see a usage number flipped during weekends time, thus this indicates they are using the bike for leisure purpose.
 
 Therefore, to close the usage gap between the ridership habit between the two groups, the following are the top three recommendation:
 
-1.  Encourage Casual Riders to use bikes for their daily commutes by providing membership discount for the first 3 months. This allows the Casual Riders get a taste of using bikes for daily commutes, thus to direct their usage habit.
-2.  3 months discount membership for Casual Riders with electric bike and classic bike can be used with no extra charge/fee. With electric bike, this allows the Casual Riders to change their commute habit without breaking a sweat, thus provide more upside of possible continue usage.
-3.  Promote bike riding as health improving exercise and eco-friendly to combat global warming.
+1.  Encourage Casual Riders to use bikes for their daily commutes by providing membership discount for the first 3 months of joining. This allows the Casual Riders get a taste of using bikes for daily commutes, thus to re-direct their usage habit.
+2.  3 months discount membership for Casual Riders with electric bike and classic bike to be used with no extra charge/fee. With electric bike, this allows the Casual Riders to change their commute habit without breaking a sweat, thus provide more upside and benefits of possible continue usage.
+3.  Promote regular bike riding as health improving exercise by giving before and after heart rate and blood pressure checks and a 3 months discount membership trial.  This can give Casual Riders an necessary proof of their health improved with regular biek riding.
