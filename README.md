@@ -15,3 +15,8 @@ File published:
 2. Capstone.html - R Markdown converted to HTML
 3. Capstone.pdf - R Markdown converted to PDF
 4. Capstone_publish.R - R code file for the analysis
+5. Capstone.pptx - Dashboard for Capstone from Tableau
+6. Avg Ride length graph - From Tableau
+7. Number of Ride - From Tableau
+
+Capstone data viz: https://public.tableau.com/views/Capstone_16582898019610/Capstone-BikeSharing?:language=en-US&:display_count=n&:origin=viz_share_link
