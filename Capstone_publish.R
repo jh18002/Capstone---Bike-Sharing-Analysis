@@ -187,8 +187,15 @@ bike_trip_distance_stat <- bike_trip_12mo_cleaned %>%
   arrange(member_casual, day_of_week)
 
 # Control check
-bike_trip_12mo_cleaned[bike_trip_12mo_cleaned$trip_distance >= 1190854.54 & is.na(bike_trip_12mo_cleaned$trip_distance) == FALSE, ]
+j <- bike_trip_12mo_cleaned[bike_trip_12mo_cleaned$trip_distance >= 1190854 & is.na(bike_trip_12mo_cleaned$trip_distance) == FALSE, ]
+i <- bike_trip_12mo_cleaned[bike_trip_12mo_cleaned$trip_distance >= 114511 & is.na(bike_trip_12mo_cleaned$trip_distance) == FALSE, ]
 bike_trip_12mo_cleaned[bike_trip_12mo_cleaned$member_casual == "casual" & bike_trip_12mo_cleaned$rideable_type == "docked_bike", ]
+
+View(i)
+View(j)
+rm(i)
+rm(j)
+
 
 # Alternative way to min/max with NA value in the data frame (to ignore it)
 #max(bike_trip_12mo_cleaned$trip_distance, na.rm = TRUE)
@@ -320,8 +327,18 @@ bike_trip_12mo_cleaned %>%
 
 # Visualization for AVG Trip Distance
 bike_trip_distance_stat %>% 
-  ggplot(aes(x = day_of_week, y = average_trip_distance, fill = member_casual)) +
-  geom_bar(stat = "identity", position = "dodge")
+  ggplot(aes(x = day_of_week, 
+             y = average_trip_distance, 
+             fill = member_casual)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  scale_y_continuous(labels = comma,
+                     expand = c(0, 0)) +
+  theme_classic() +
+  theme(legend.position = "bottom") +
+  labs(title = "Average Trip Distance", 
+       subtitle = "By Rider Type and Day-of-Week",
+       x = "Day of the Week",
+       y = "Avg Ride Length (in seconds)")
 
 # Visualization for MAX Trip Distance
 bike_trip_distance_stat %>% 
