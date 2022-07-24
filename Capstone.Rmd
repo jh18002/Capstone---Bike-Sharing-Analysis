@@ -235,7 +235,7 @@ count_rides_usertype_biketype_dayofweek <-
   mutate(day_of_week = wday(day_of_week, label=TRUE, abbr=FALSE))
 ```
 
-Fifth, we are to calculate the average, minimum, maximum trip distance by user types and day-of-week:
+Fifth, we are to calculate the average, minimum, maximum trip distance based on the geolocation information (i.e., Longitude and Latitude) by user types and day-of-week:
 
 ```{r Pivot avg, min, and max on trip distance by types and day-of-week}
 # Avg, min, and max trip distance for each type of users by day_of_week
@@ -266,15 +266,15 @@ Based on the descriptive analysis on the past 12 months ridership data:
 -   The day of the week with highest numbers of rides is: Saturday
 -   On average, the ride duration is: 20.69015 minutes (1,241.409 sec)
 
-As the following graph shows, for the average ride duration (in seconds), Cyclistic Members are relatively constant. However, for Casual Riders, the ridership dipped slightly during the weekdays period. That said, the graph depicts that Casual Riders, in general, spent longer time riding than Cyclistic Members. We can derive a **hypothesis that Cyclistic Members are using the Cyclistic bikes for their daily commute to school or work, which usually in close proximity. On the other hand, for Casual Riders with longer ride duration, this might indicates that they tended to travel to further area for leisure purpose**.
+As the following graph shows, for the average ride duration (in seconds), Cyclistic Members are relatively constant. However, for Casual Riders, the ridership dipped during the weekdays period. Therefore, the graph depicts that Casual Riders, in general, spent longer time riding than Cyclistic Members, even during weekdays. We can derive a **hypothesis that Cyclistic Members are using the Cyclistic bikes for their daily commute to school or work as the duration is shorter. On the other hand, for Casual Riders with longer ride duration, this might indicates that they tended to travel to longer and stop more frequent to rest-up or sightseeing for leisure purpose**.
 
 ```{r Visualization for average duration}
 avg_ride_length_usertype_dayofweek %>% 
-  ggplot(aes(x = day_of_week, 
-             y = avg_ride_length,
+  ggplot(aes(x = avg_ride_length, 
+             y = day_of_week,
              fill = member_casual)) +
   geom_col(position = "dodge") +
-  scale_y_continuous(labels = comma,
+  scale_x_continuous(labels = comma,
                      expand = c(0, 0)) +
   theme_classic() +
   theme(legend.position = "bottom") +
@@ -282,6 +282,24 @@ avg_ride_length_usertype_dayofweek %>%
        subtitle = "By Rider Type and Day-of-Week",
        x = "Day of the Week",
        y = "Avg Ride Length (in seconds)")
+```
+
+With the trip distance information, we can look at the actual distance (in meters) traveled per bike trip by each type of users. The below graph mapped out the trip distance taken by each type of users throughout the year. It shows and proves that Casual Riders travel, on average, longer distance than Cyclistic Members. This indicates that **Cyclistic Members are using the Cyclistic bikes for their daily commute to school or work, which usually in closer proximity. On the other hand, for Casual Riders, they traveled longer distance, this might indicates that they tended to travel to further area for leisure purpose**.
+
+```{r Visualization for average trip distance}
+bike_trip_distance_stat %>% 
+  ggplot(aes(x = day_of_week, 
+             y = average_trip_distance, 
+             fill = member_casual)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  scale_y_continuous(labels = comma,
+                     expand = c(0, 0)) +
+  theme_classic() +
+  theme(legend.position = "bottom") +
+  labs(title = "Average Trip Distance", 
+       subtitle = "By Rider Type and Day-of-Week",
+       x = "Day of the Week",
+       y = "Avg Ride Distance (in meters)")
 ```
 
 The data also depicted ridership trend between Casual Riders and Cyclistic Members for the past 12 months by day-of-week:
@@ -307,7 +325,7 @@ count_rides_usertype_dayofweek %>%
 
 The above line graph shows that during weekdays, Cyclistic Members have higher ridership than Casual Riders group. However, the ridership of Casual Riders increased significantly during each weekends throughout the 12 months period. This implies and reinforces our hypothesis indicated above, i.e., Cyclistic Members are using the Cyclistic bikes for their daily commute in close proximity and Casual Riders are using the bikes to travel to further for leisure.
 
-Additionally, if we include rideable type (i.e., bike type) data into the analysis, we would see that the number of rides pertaining to Casual Riders is relatively low compare to Cyclistic Members during weekdays. On the other hand, the ridership number increased to the level on par of the ridership number of Cyclistic Members during weekends. In facts, the ridership number of Cyclistic Members is constant throughout the week. This implies that to convert Casual Rider to Cyclistic Member, the company will need change the Casual Ridership habit or behavior.  The following graph shows the ridership number based on rideable type:
+Additionally, if we include rideable type (i.e., bike type) data into the analysis, we would see that the number of rides pertaining to Casual Riders is relatively low compare to Cyclistic Members during weekdays. On the other hand, the ridership number increased to the level on par of the ridership number of Cyclistic Members during weekends. In facts, the ridership number of Cyclistic Members is constant throughout the week. This implies that to convert Casual Rider to Cyclistic Member, the company will need change the Casual Ridership habit or behavior. The following graph shows the ridership number based on rideable type:
 
 ```{r Visualization for number of rides with bike type}
 count_rides_usertype_biketype_dayofweek %>% 
@@ -326,7 +344,7 @@ count_rides_usertype_biketype_dayofweek %>%
        y = "Number of Rides")
 ```
 
-Beside ridership number based on rideable type, the above graph implicates an additional aspect is there were docked bikes associated with Casual Rider only throughout the year.  There is no docked bike showing under Cyclistic Member.  Therefore, we need more research and information on the docked bikes situation.  Why only Casual Riders had docked bikes?  How about Cyclistic Members?  This might gives us insight on another perspective of the usage habit difference between Casual Riders and Cyclistic Members.
+Beside ridership number based on rideable type, the above graph implicates an additional aspect is there were docked bikes associated with Casual Rider only throughout the year. There is no docked bike showing under Cyclistic Member. Therefore, we need more research and information on the docked bikes situation. Why only Casual Riders had docked bikes? How about Cyclistic Members? This might gives us insight on another perspective of the usage habit difference between Casual Riders and Cyclistic Members.
 
 ## Recommending Actions
 
@@ -336,4 +354,4 @@ Therefore, to close the usage gap between the ridership habit between the two gr
 
 1.  Encourage Casual Riders to use bikes for their daily commutes by providing membership discount for the first 3 months of joining. This allows the Casual Riders get a taste of using bikes for daily commutes, thus to re-direct their usage habit.
 2.  3 months discount membership for Casual Riders with electric bike and classic bike to be used with no extra charge/fee. With electric bike, this allows the Casual Riders to change their commute habit without breaking a sweat, thus provide more upside and benefits of possible continue usage.
-3.  Promote regular bike riding as health improving exercise by giving before and after heart rate and blood pressure checks and a 3 months discount membership trial.  This can give Casual Riders an necessary proof of their health improved with regular biek riding.
+3.  Promote regular bike riding as health improving exercise by giving before and after heart rate and blood pressure checks and a 3 months discount membership trial. This can give Casual Riders an necessary proof of their health improved with regular bike riding.
